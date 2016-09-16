@@ -623,6 +623,50 @@ $scope.customFilter = 'a';
                 </div>
             </div>
         </accordion-group>
+
+        <accordion-group heading="Disabled Options">
+            <div class="row">
+                <div class="col-xs-12">
+                    You can disable certain options from being checked/unchecked
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                    <h3>Demo</h3>
+                    <div class="well">
+                        <div>
+                            <div ng-dropdown-multiselect options="disabledOptionsData" selected-model="disabledOptionsModel" checkboxes="true"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <h3>The model:</h3>
+                    <pre>{{disabledOptionsModel|json}}</pre>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Code</h3>
+                    <div class="well">
+                        <div>
+                            <div hljs>
+                                // HTML
+                                <div ng-dropdown-multiselect options="disabledOptionsData" selected-model="disabledOptionsModel" checkboxes="true"></div>
+
+                                // JavaScript $scope.disabledOptionsModel = [];
+                                $scope.disabledOptionsData = [
+                                { id: 1, label: 'David', disabled: true },
+                                { id: 2, label: 'Jhon' },
+                                { id: 3, label: 'Lisa', disabled: true },
+                                { id: 4, label: 'Nicole', disabled: true },
+                                { id: 5, label: 'Danny' }
+                                ];</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </accordion-group>
+
     </accordion>
     <h1>Full API Documentation</h1>
     <h2>Attributes</h2>

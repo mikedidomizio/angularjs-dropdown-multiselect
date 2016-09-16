@@ -36,10 +36,10 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                     template += '<li role="presentation" ng-repeat="option in options | filter: searchFilter">';
                 }
 
-                template += '<a role="menuitem" tabindex="-1" ng-click="setSelectedItem(getPropertyForObject(option,settings.idProp))">';
+                template += '<a role="menuitem" tabindex="-1" ng-style="option.disabled && {\'opacity\': \'0.5\'}" ng-click="setSelectedItem(getPropertyForObject(option,settings.idProp), false, option)">';
 
                 if (checkboxes) {
-                    template += '<div class="checkbox"><label><input class="checkboxInput" type="checkbox" ng-click="checkboxClick($event, getPropertyForObject(option,settings.idProp))" ng-checked="isChecked(getPropertyForObject(option,settings.idProp))" /> {{getPropertyForObject(option, settings.displayProp)}}</label></div></a>';
+                    template += '<div class="checkbox"><label><input ng-disabled="option.disabled" class="checkboxInput" type="checkbox" ng-click="checkboxClick($event, getPropertyForObject(option,settings.idProp))" ng-checked="isChecked(getPropertyForObject(option,settings.idProp))" /> {{getPropertyForObject(option, settings.displayProp)}}</label></div></a>';
                 } else {
                     template += '<span data-ng-class="{\'glyphicon glyphicon-ok\': isChecked(getPropertyForObject(option,settings.idProp))}"></span> {{getPropertyForObject(option, settings.displayProp)}}</a>';
                 }
@@ -229,7 +229,9 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                     $scope.externalEvents.onSelectAll();
 
                     angular.forEach($scope.options, function (value) {
-                        $scope.setSelectedItem(value[$scope.settings.idProp], true);
+                        if (!value.disabled) { // if is not disabled
+                            $scope.setSelectedItem(value[$scope.settings.idProp], true);
+                        }
                     });
                 };
 
@@ -240,14 +242,32 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                         $scope.externalEvents.onDeselectAll();
                     }
 
+                    var selected = angular.copy($scope.selectedModel);
+
+                    if (!angular.isArray(selected)) {
+                        selected = [ selected ]; // convert to an array
+                    }
+
+                    for (var sel = 0; sel < selected.length; sel++) {
+                        for (var i = 0; i < $scope.options.length; i++) {
+                            if ($scope.options[i].id === selected[sel].id) {
+                                $scope.setSelectedItem($scope.options[i].id, false, $scope.options[i]);
+                                break;
+                            }
+                        }
+                    }
+
                     if ($scope.singleSelection) {
                         clearObject($scope.selectedModel);
-                    } else {
-                        $scope.selectedModel.splice(0, $scope.selectedModel.length);
                     }
+
                 };
 
-                $scope.setSelectedItem = function (id, dontRemove) {
+                $scope.setSelectedItem = function (id, dontRemove, option) {
+                    if (option && option.disabled) { // if option has key for disable and is true, do not change
+                        return;
+                    }
+
                     var findObj = getFindObj(id);
                     var finalObj = null;
 

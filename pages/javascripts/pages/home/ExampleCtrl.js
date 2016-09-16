@@ -154,5 +154,20 @@ angular.module('exampleApp').controller('ExampleCtrl', ['$scope', function($scop
         enableSearch: true
     };
 
+
+    // Disable Options Example
+    $scope.disabledOptionsModel = [];
+    $scope.disabledOptionsData = [
+      { id: 1, label: 'David', disabled: true },
+      { id: 2, label: 'Jhon' },
+      { id: 3, label: 'Lisa', disabled: true },
+      { id: 4, label: 'Nicole', disabled: true },
+      { id: 5, label: 'Danny' }
+    ];
+
+    $scope.disabledOptionsSettings = {
+        enableSearch: true
+    };
+
     $scope.customFilter = 'a';
 }]);
